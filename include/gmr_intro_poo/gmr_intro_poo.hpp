@@ -2,8 +2,7 @@
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Float32.h>
 #include <string>
-#include <tf2/LinearMath/Quaternion.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
 class RobotClass
 {
     public:
@@ -33,13 +32,4 @@ class RobotClass
             double          left;
             double          right;
         }_vel_m_s;
-
-        struct RobotPose
-        {
-            double x;
-            double y;
-            double theta;
-        }_robot_pose;
-
-        double _prev_timestamp;
 };
