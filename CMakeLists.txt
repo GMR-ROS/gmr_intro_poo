@@ -10,6 +10,8 @@ project(gmr_intro_poo)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  tf2
+  tf2_ros
 )
 
 ## System dependencies are found with CMake's conventions

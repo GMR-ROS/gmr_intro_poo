@@ -5,6 +5,9 @@
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <std_srvs/Trigger.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <geometry_msgs/TransformStamped.h>
+
 class RobotClass
 {
     public:
@@ -15,7 +18,6 @@ class RobotClass
     private:
         void                subLeft(const std_msgs::Float32::ConstPtr &msg);
         void                subRight(const std_msgs::Float32::ConstPtr &msg);
-
         ros::NodeHandle*    _nh;
         ros::Publisher      _pub_odom;
         ros::ServiceClient  _client_toggle_robot;

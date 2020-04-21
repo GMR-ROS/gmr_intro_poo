@@ -41,21 +41,23 @@ void RobotClass::checkToggleRobot()
 }
 void RobotClass::calculateOdom()
 {
-    double cur_timestamp = ros::Time::now().toSec();
+    ros::Time cur_timestamp = ros::Time::now();
     double vl = _vel_m_s.left;
     double vr = _vel_m_s.right;
     double dt, wz, vx;
     nav_msgs::Odometry odom;
     tf2::Quaternion odom_quat;
 
-    dt = cur_timestamp - _prev_timestamp;
-    _prev_timestamp = cur_timestamp;
-    vx = 0.5*(vr - vl); // Eq. 1                     
+    dt = cur_timestamp.toSec() - _prev_timestamp;
+    _prev_timestamp = cur_timestamp.toSec();
+    vx = 0.5*(vr + vl); // Eq. 1                     
     wz = (vr - vl)/_params.axle_track; // Eq.2
     _robot_pose.theta += wz*dt; // Eq. 8
     _robot_pose.x += vx*std::cos(_robot_pose.theta)*dt; // Eq. 6
     _robot_pose.y += vx*std::sin(_robot_pose.theta)*dt; // Eq. 7
 
+    odom.header.frame_id = "/map";
+    odom.child_frame_id = "/base_link";
     odom_quat.setRPY(0,0, _robot_pose.theta);
     odom.twist.twist.angular.z = wz;
     odom.twist.twist.linear.x = vx;
@@ -63,6 +65,17 @@ void RobotClass::calculateOdom()
     odom.pose.pose.position.y = _robot_pose.y;
     odom.pose.pose.orientation = tf2::toMsg(odom_quat);
     _pub_odom.publish(odom);
+
+    static tf2_ros::TransformBroadcaster br;
+
+    geometry_msgs::TransformStamped odom_trans;
+    odom_trans.header.frame_id = "/map";
+    odom_trans.child_frame_id = "/base_link";
+    odom_trans.header.stamp = cur_timestamp;
+    odom_trans.transform.translation.x = odom.pose.pose.position.x;
+    odom_trans.transform.translation.y = odom.pose.pose.position.y;
+    odom_trans.transform.rotation = tf2::toMsg(odom_quat);
+    br.sendTransform(odom_trans);
 
 }
 void RobotClass::subLeft(const std_msgs::Float32::ConstPtr &msg)
