@@ -14,23 +14,23 @@ RobotClass::RobotClass(ros::NodeHandle* nh)
     _sub_right = _nh->subscribe(_params.topic_name_right_rpm, 1, &RobotClass::subRight, this);
 
     _robot_pose = (const struct RobotPose) { 0 };
-    _prev_timestamp = ros::Time::now().toSec();
+    _prev_timestamp = ros::Time::now();
     _vel_m_s.left = 0.0;
     _vel_m_s.right = 0.0;    
 }
 
 void RobotClass::calculateOdom()
 {
-    double cur_timestamp = ros::Time::now().toSec();
+    ros::Time cur_timestamp = ros::Time::now();
     double vl = _vel_m_s.left;
     double vr = _vel_m_s.right;
     double dt, wz, vx;
     nav_msgs::Odometry odom;
     tf2::Quaternion odom_quat;
 
-    dt = cur_timestamp - _prev_timestamp;
+    dt = cur_timestamp.toSec() - _prev_timestamp.toSec();
     _prev_timestamp = cur_timestamp;
-    vx = 0.5*(vr - vl); // Eq. 1                     
+    vx = 0.5*(vr + vl); // Eq. 1                     
     wz = (vr - vl)/_params.axle_track; // Eq.2
     _robot_pose.theta += wz*dt; // Eq. 8
     _robot_pose.x += vx*std::cos(_robot_pose.theta)*dt; // Eq. 6

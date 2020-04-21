@@ -41,5 +41,5 @@ class RobotClass
             double theta;
         }_robot_pose;
 
-        double _prev_timestamp;
+        ros::Time _prev_timestamp;
 };
