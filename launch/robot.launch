@@ -12,6 +12,7 @@
   <node pkg="gmr_intro_poo" type="gmr_intro_poo_node" name="gmr_intro_poo_node" output="screen" required="true">
     <param name="nome_topico_left_rpm" value="/left_rpm"/>
     <param name="nome_topico_right_rpm" value="/right_rpm"/>
+    <param name="time_between_toggles" value="2.0"/>
   </node>
 
 

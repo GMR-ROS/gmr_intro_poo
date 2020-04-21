@@ -12,6 +12,7 @@ int main(int argc, char **argv)
     // Loop de ROS para manter o nó vivo
     while(ros::ok())
     {
+        robot.checkToggleRobot();
         robot.calculateOdom();
         loop_rate.sleep();
         ros::spinOnce();

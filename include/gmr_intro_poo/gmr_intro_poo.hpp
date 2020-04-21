@@ -4,11 +4,13 @@
 #include <string>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <std_srvs/Trigger.h>
 class RobotClass
 {
     public:
         RobotClass(ros::NodeHandle* nh);
         void                calculateOdom();
+        void                checkToggleRobot();
 
     private:
         void                subLeft(const std_msgs::Float32::ConstPtr &msg);
@@ -16,11 +18,13 @@ class RobotClass
 
         ros::NodeHandle*    _nh;
         ros::Publisher      _pub_odom;
+        ros::ServiceClient  _client_toggle_robot;
         ros::Subscriber     _sub_left;
         ros::Subscriber     _sub_right;
 
         struct Params
         {
+            double          time_between_toggles;
             double          axle_track;
             double          gear_ratio;
             double          wheel_radius;
@@ -42,4 +46,5 @@ class RobotClass
         }_robot_pose;
 
         double _prev_timestamp;
+        double _prev_timestamp_toggle;
 };
